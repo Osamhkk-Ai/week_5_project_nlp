@@ -1,5 +1,7 @@
 import typer
 from commands.generate import generate_command
+from utils.data_handler import load_class_distribution
+from commands.eda import eda_app 
 
 app = typer.Typer()
 
@@ -22,6 +24,7 @@ def generate(
     )
 
 
+app.add_typer(eda_app, name="eda")
 
     
 

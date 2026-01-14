@@ -1,5 +1,6 @@
 from google import genai
-
+import pandas as pd
+from pathlib import Path
 
 def generate_classification_csv_gemini(
     num_rows: int,
@@ -37,3 +38,32 @@ Use ONLY these labels:
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(csv_text)
+
+
+
+def load_class_distribution(
+    csv_path: str,
+    label_col: str,
+) -> dict:
+    """
+    Load a CSV file and return class distribution.
+
+    Returns:
+        dict: {class_name: count}
+    """
+
+    csv_path = Path(csv_path)
+    if not csv_path.exists():
+        raise FileNotFoundError(f"CSV file not found: {csv_path}")
+
+    df = pd.read_csv(csv_path)
+
+    if label_col not in df.columns:
+        raise ValueError(
+            f"Column '{label_col}' not found. "
+            f"Available columns: {list(df.columns)}"
+        )
+
+    class_counts = df[label_col].value_counts().to_dict()
+
+    return class_counts
