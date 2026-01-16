@@ -41,10 +41,7 @@ Use ONLY these labels:
 
 
 
-def load_class_distribution(
-    csv_path: str,
-    label_col: str,
-) -> dict:
+def load_class_distribution(csv_path: str, label_col: str,) -> dict:
     """
     Load a CSV file and return class distribution.
 
@@ -67,3 +64,27 @@ def load_class_distribution(
     class_counts = df[label_col].value_counts().to_dict()
 
     return class_counts
+
+
+def load_text_length(csv_path: str,text_col: str):
+    """
+    Load a CSV file and return text length histogram.
+    """
+    csv_path = Path(csv_path)
+    if not csv_path.exists():
+        raise FileNotFoundError(f"CSV file not found: {csv_path}")
+
+    df = pd.read_csv(csv_path)
+
+    if text_col not in df.columns:
+        raise ValueError(
+            f"Column '{text_col}' not found. "
+            f"Available columns: {list(df.columns)}"
+        )
+    texts = df[text_col].dropna().astype(str).str.strip()
+
+    text_counts_word = [len(t.split()) for t in texts]
+    text_counts_char = [len(t) for t in texts]
+    return text_counts_word , text_counts_char
+
+
