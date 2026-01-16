@@ -1,6 +1,7 @@
 from google import genai
 import pandas as pd
 from pathlib import Path
+from utils.arabic_text import remove_text , normalize_arabic_letters , normalize_whitespace , remove_stopwords , aggressive_normalize
 
 def generate_classification_csv_gemini(
     num_rows: int,
@@ -41,7 +42,7 @@ Use ONLY these labels:
 
 
 
-def load_class_distribution(csv_path: str, label_col: str,) -> dict:
+def load_class_distribution(csv_path: str, label_col: str,):
     """
     Load a CSV file and return class distribution.
 
@@ -86,5 +87,28 @@ def load_text_length(csv_path: str,text_col: str):
     text_counts_word = [len(t.split()) for t in texts]
     text_counts_char = [len(t) for t in texts]
     return text_counts_word , text_counts_char
+
+
+
+def clean_arabic_text(text: str, * , remove: bool = False, replace_light: bool = False, replace_aggressive: bool = False, stopwords: bool = False):
+    """
+    Arabic text cleaning orchestrator.
+    """
+    if not isinstance(text, str):
+        return text
+
+    if remove:
+        text = remove_text(text)
+
+    if replace_light:
+        text = normalize_arabic_letters(text)
+
+    if replace_aggressive:
+        text = aggressive_normalize(text)
+
+    if stopwords:
+        text = remove_stopwords(text)
+    text = normalize_whitespace(text)
+    return text
 
 
