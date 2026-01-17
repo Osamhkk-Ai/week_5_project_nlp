@@ -155,11 +155,7 @@ uv run python main.py text preprocess --csv-path outputs/data/output.csv --text-
 Create vector embeddings using **Model2Vec**.
 
 ```bash
-uv run python main.py embd model2vec \
-  --csv-path outputs/data/cl1.csv \
-  --text-col text \
-  --label-col label \
-  --output hi3
+uv run python main.py embd model2vec --csv-path outputs/data/cl1.csv --text-col text --label-col label --output hi3
 ```
 
 **Output:**
@@ -229,7 +225,3 @@ uv run python main.py model train --data-path outputs/embeddings/hi3.pkl --model
 * Paths assume project root execution
 * Replace `YOUR_API_KEY` with a valid Gemini API key
 * Designed for extensibility (new EDA, embeddings, models)
-
----
-
-✅ This README documents the **end‑to‑end NLP CLI workflow** from raw text generation to trained models.
