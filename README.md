@@ -1,5 +1,11 @@
 # Week 5 Project – Arabic NLP CLI Tool
 
+
+
+![Arabic NLP](assets/ping.png)
+
+
+
 ## Project Structure
 
 ```
