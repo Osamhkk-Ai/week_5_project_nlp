@@ -2,7 +2,7 @@
 
 
 
-![Arabic NLP](assets/ping.png)
+![Arabic NLP](ping.png)
 
 
 
