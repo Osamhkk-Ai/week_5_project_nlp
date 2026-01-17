@@ -74,7 +74,7 @@ This step is responsible for **generating synthetic Arabic text data** for class
 * `--topic` : You can choose any topic or domain you want
 * `--count` : Number of rows (samples) to generate
 * `--class` : Classification labels (repeat this option for multiple classes)
-* `--api-key` : Gemini API key (the model is free to use)
+* `--api-key` : Gemini API key (the model is free to use, so no need to worry or stress about usage)
 
 Example:
 
