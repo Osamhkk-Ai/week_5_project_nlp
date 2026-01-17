@@ -1,0 +1,60 @@
+# ======================
+# Python / Cache
+# ======================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ======================
+# Virtual Environment
+# ======================
+venv/
+.env/
+
+# ======================
+# Notebooks
+# ======================
+*.ipynb_checkpoints/
+
+# ======================
+# OS / Editor
+# ======================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ======================
+# OUTPUTS (Generated)
+# ======================
+
+# CSV outputs
+outputs/data/*.csv
+
+# Embeddings (PKL)
+outputs/embeddings/*.pkl
+
+# Trained models
+outputs/models/*.pkl
+
+# Reports
+outputs/reports/*.md
+
+# Visualizations (plots)
+outputs/visualizations/*.png
+outputs/visualizations/*.jpg
+
+# ======================
+# Keep folder structure
+# ======================
+!outputs/data/.gitkeep
+!outputs/embeddings/.gitkeep
+!outputs/models/.gitkeep
+!outputs/reports/.gitkeep
+!outputs/visualizations/.gitkeep
+
+# ======================
+# Logs
+# ======================
+*.log

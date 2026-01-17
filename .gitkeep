@@ -1,0 +1,5 @@
+outputs/data/.gitkeep
+outputs/embeddings/.gitkeep
+outputs/models/.gitkeep
+outputs/reports/.gitkeep
+outputs/visualizations/.gitkeep
