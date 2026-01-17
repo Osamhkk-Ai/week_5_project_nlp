@@ -5,8 +5,7 @@ import pandas as pd
 import numpy as np
 import pickle
 import typer
-import torch
-import sys
+
 
 embedding_app = typer.Typer()
 DEFAULT_EMBEDDINGS_DIR = Path(
@@ -16,6 +15,7 @@ DEFAULT_EMBEDDINGS_DIR = Path(
 def tfidf(
     csv_path: Path = typer.Option(..., help="Path to cleaned CSV file"),
     text_col: str = typer.Option(..., help="Text column name"),
+    label_col: str = typer.Option(..., help="Label column name"),
     max_features: int = typer.Option(5000, help="Maximum TF-IDF features"),
     ngram_min: int = typer.Option(1, help="Minimum n-gram size"),
     ngram_max: int = typer.Option(1, help="Maximum n-gram size"),
@@ -27,6 +27,8 @@ def tfidf(
 
     df = pd.read_csv(csv_path)
     texts = df[text_col].astype(str).tolist()
+    labels = df[label_col].values
+
 
     vectorizer = TfidfVectorizer(
         max_features=max_features,
@@ -48,7 +50,9 @@ def tfidf(
 
     output.parent.mkdir(parents=True, exist_ok=True)
     with open(output, "wb") as f:
-        pickle.dump(vectors, f)
+        pickle.dump({"X": vectors,"y": labels},f
+)
+
 
     typer.echo("\nTF-IDF Embedding Created Successfully")
     typer.echo("-----------------------------------")
@@ -65,6 +69,7 @@ def tfidf(
 def model2vec(
     csv_path: Path = typer.Option(..., help="Path to cleaned CSV file"),
     text_col: str = typer.Option(..., help="Text column name"),
+    label_col: str = typer.Option(..., help="Label column name"),
     output: Path = typer.Option(
         ...,
         help="Output file name or path (.pkl will be added automatically)",
@@ -77,6 +82,8 @@ def model2vec(
 
     df = pd.read_csv(csv_path)
     texts = df[text_col].astype(str).tolist()
+    labels = df[label_col].values
+
 
     if output.parent == Path("."):
         output = DEFAULT_EMBEDDINGS_DIR / output
@@ -100,7 +107,14 @@ def model2vec(
     memory_mb = embeddings.nbytes / (1024 ** 2)
 
     with open(output, "wb") as f:
-        pickle.dump(embeddings, f)
+        pickle.dump(
+    {
+        "X": embeddings,
+        "y": labels
+    },
+    f
+)
+
 
     typer.echo("\nModel2Vec Embedding Created Successfully")
     typer.echo("---------------------------------------")

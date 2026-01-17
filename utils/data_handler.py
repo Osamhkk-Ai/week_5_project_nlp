@@ -1,7 +1,13 @@
 from google import genai
-import pandas as pd
 from pathlib import Path
-from utils.arabic_text import remove_text , normalize_arabic_letters , normalize_whitespace , remove_stopwords , aggressive_normalize
+
+import pandas as pd
+import numpy as np
+import pickle
+
+from utils.arabic_text import clean_arabic_text
+from sklearn.model_selection import train_test_split
+
 
 def generate_classification_csv_gemini(
     num_rows: int,
@@ -90,8 +96,6 @@ def load_text_length(csv_path: str,text_col: str):
 
 
 
-import pandas as pd
-from utils.arabic_text import clean_arabic_text
 
 def clean_text_column(df: pd.DataFrame,text_col: str,*,remove: bool = False,replace_light: bool = False,replace_aggressive: bool = False,stopwords: bool = False):
     if text_col not in df.columns:
@@ -109,7 +113,6 @@ def clean_text_column(df: pd.DataFrame,text_col: str,*,remove: bool = False,repl
     return df
 
 
-import pandas as pd
 
 def text_stats(series: pd.Series) -> dict:
     texts = series.dropna().astype(str)
@@ -119,3 +122,65 @@ def text_stats(series: pd.Series) -> dict:
         "avg_chars": texts.str.len().mean(),
         "total_words": texts.str.split().str.len().sum(),
     }
+
+
+
+
+
+
+def load_data(
+    data_path: str,
+    input_col: str | None,
+    output_col: str,
+):
+    """
+    Load data from CSV or PKL.
+    Returns X, y
+    """
+
+    path = Path(data_path)
+
+    if not path.exists():
+        raise FileNotFoundError(f"File not found: {data_path}")
+
+    # PKL
+    if path.suffix == ".pkl":
+        with open(path, "rb") as f:
+            data = pickle.load(f)
+
+        X = np.array(data["X"])
+        y = np.array(data["y"])
+
+    # CSV
+    elif path.suffix == ".csv":
+        if input_col is None:
+            raise ValueError("input_col is required for CSV")
+
+        df = pd.read_csv(path)
+
+        X = df[input_col].tolist()
+        y = df[output_col].values
+
+        # لو embeddings كنص
+        if isinstance(X[0], str):
+            X = [eval(x) for x in X]
+
+        X = np.array(X)
+
+    else:
+        raise ValueError("Only CSV or PKL supported")
+
+    return X, y
+
+
+def split_data(X, y, test_size=0.2):
+    """
+    Split data into train/test
+    """
+    return train_test_split(
+        X,
+        y,
+        test_size=test_size,
+        stratify=y,
+        random_state=42,
+    )
