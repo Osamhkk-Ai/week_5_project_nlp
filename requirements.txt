@@ -26,6 +26,8 @@ bleach==6.2.0
 blinker==1.9.0
 build==1.3.0
 cachetools==6.2.2
+pyarabic
+camel_tools
 certifi==2024.8.30
 cffi==1.17.1
 charset-normalizer==3.4.0
@@ -298,5 +300,6 @@ wrapt==1.16.0
 yarl==1.22.0
 zipp==3.23.0
 zstandard==0.25.0
+
 
 
