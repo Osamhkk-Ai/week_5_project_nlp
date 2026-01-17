@@ -2,8 +2,7 @@ import re
 from pyarabic.araby import strip_tashkeel, strip_tatweel
 from camel_tools.utils.normalize import normalize_alef_ar, normalize_alef_maksura_ar
 from pathlib import Path
-
-
+import pandas as pd
 
 
 
@@ -86,6 +85,16 @@ def normalize_whitespace(text: str) -> str:
 #     text = remove_punctuation(text)
 #     text = normalize_whitespace(text)
 #     return text
+import re
+
+def reduce_repeated_chars(text: str) -> str:
+    if not isinstance(text, str):
+        return text
+    return re.sub(r"(.)\1{2,}", r"\1", text)
+
+def remove_english(text: str) -> str:
+    return re.sub(r"[A-Za-z]+", "", text)
+
 
 def remove_text(text: str) -> str:
     """
@@ -104,12 +113,15 @@ def remove_text(text: str) -> str:
     text = remove_tatweel(text)
     text = remove_punctuation(text)
     text = normalize_whitespace(text)
+    text = reduce_repeated_chars(text)
+    text = remove_english(text)
+
 
     return text
 
 
 
-STOPWORDS_PATH = Path("resources/stopwords.txt")
+STOPWORDS_PATH = Path(r"C:\Users\HP\Desktop\SDAIA_BOOTCAMP5\nlp-cli-tool\resources\stopwords_nltk.txt")
 
 def load_stopwords() -> set[str]:
     with open(STOPWORDS_PATH, encoding="utf-8") as f:
@@ -148,3 +160,24 @@ def aggressive_normalize(text: str) -> str:
         .replace("ؤ", "و")
         .replace("ئ", "ي")
     )
+
+def clean_arabic_text(text: str, * , remove: bool = False, replace_light: bool = False, replace_aggressive: bool = False, stopwords: bool = False):
+    """
+    Arabic text cleaning orchestrator.
+    """
+    if not isinstance(text, str):
+        return text
+
+    if remove:
+        text = remove_text(text)
+
+    if replace_light:
+        text = normalize_arabic_letters(text)
+
+    if replace_aggressive:
+        text = aggressive_normalize(text)
+
+    if stopwords:
+        text = remove_stopwords(text)
+    text = normalize_whitespace(text)
+    return text

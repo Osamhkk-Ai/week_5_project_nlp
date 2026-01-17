@@ -90,25 +90,32 @@ def load_text_length(csv_path: str,text_col: str):
 
 
 
-def clean_arabic_text(text: str, * , remove: bool = False, replace_light: bool = False, replace_aggressive: bool = False, stopwords: bool = False):
-    """
-    Arabic text cleaning orchestrator.
-    """
-    if not isinstance(text, str):
-        return text
+import pandas as pd
+from utils.arabic_text import clean_arabic_text
 
-    if remove:
-        text = remove_text(text)
+def clean_text_column(df: pd.DataFrame,text_col: str,*,remove: bool = False,replace_light: bool = False,replace_aggressive: bool = False,stopwords: bool = False):
+    if text_col not in df.columns:
+        raise ValueError(f"Column '{text_col}' not found")
 
-    if replace_light:
-        text = normalize_arabic_letters(text)
-
-    if replace_aggressive:
-        text = aggressive_normalize(text)
-
-    if stopwords:
-        text = remove_stopwords(text)
-    text = normalize_whitespace(text)
-    return text
+    df[text_col] = df[text_col].apply(
+        lambda x: clean_arabic_text(
+            x,
+            remove=remove,
+            replace_light=replace_light,
+            replace_aggressive=replace_aggressive,
+            stopwords=stopwords,
+        )
+    )
+    return df
 
 
+import pandas as pd
+
+def text_stats(series: pd.Series) -> dict:
+    texts = series.dropna().astype(str)
+
+    return {
+        "rows": len(texts),
+        "avg_chars": texts.str.len().mean(),
+        "total_words": texts.str.split().str.len().sum(),
+    }
