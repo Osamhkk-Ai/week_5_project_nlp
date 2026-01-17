@@ -1,31 +1,15 @@
 import typer
 from commands.generate import generate_app
-# from utils.data_handler import load_class_distribution
 from commands.eda import eda_app
 from commands.preprocessing import preprocess_app
-app = typer.Typer()
+from commands.embedding import embedding_app
 
-# @app.command()
-# def generate(
-#     topic: str = typer.Option("customer reviews",help="Subject/domain of the generated texts"),
-#     count: int = typer.Option(..., help="Number of rows to generate"),
-#     classes: list[str] = typer.Option(...,"--class", help="Repeat this option to add multiple classes. Example: --class positive --class negative"),
-#     api_key: str = typer.Option(..., help="Your Gemini API key (free tier)"),
-# ):
-#     """
-#     Generate synthetic Arabic classification data using Gemini.
-#     Output is saved automatically to outputs/output_data/synthetic.csv
-#     """
-#     generate_command(
-#         topic=topic,
-#         count=count,
-#         classes=classes,
-#         api_key=api_key,
-#     )
+app = typer.Typer()
 
 app.add_typer(generate_app, name="generate")
 app.add_typer(eda_app, name="eda")
 app.add_typer(preprocess_app, name="text")
+app.add_typer(embedding_app, name="embd")
 
 
 
